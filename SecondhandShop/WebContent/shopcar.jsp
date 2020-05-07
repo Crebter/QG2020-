@@ -149,6 +149,9 @@
 		<c:if test="${sessionScope.user!=null}" >
 			<a href="productAdd.jsp" >上传闲置物品</a>
 		</c:if>
+		<c:if test="${sessionScope.user!=null}">
+			<a href="ProductServlet?method=myProduct&uid=${user.getId() }">我的商品</a>
+		</c:if>
 		<c:if test="${sessionScope.user!=null}" >
 			<a href="update.jsp" >个人信息</a>
 		</c:if>

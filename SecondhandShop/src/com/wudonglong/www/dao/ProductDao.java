@@ -1,9 +1,12 @@
 package com.wudonglong.www.dao;
 
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 import com.wudonglong.www.entity.Product;
+import com.wudonglong.www.util.DBUtil;
 
 public interface ProductDao {
 	
@@ -171,5 +174,31 @@ public interface ProductDao {
 	 * @return
 	 */
 	public boolean updateStock(int stock,int id);
+	
+	/**
+	 * 查询审核成功的商品
+	 * @param uid
+	 * @return
+	 */
+	public List<Product> myProductValid1(String uid);
+	
+	/**
+	 * 查询审核失败的商品
+	 * @param uid
+	 * @return
+	 */
+	public List<Product> myProductValid2(String uid);
+
+	
+	
+	
+	/**
+	 * 查询正在审核的商品
+	 * @param uid
+	 * @return
+	 */
+	public List<Product> myProductValid3(String uid);
+
+
 	
 }

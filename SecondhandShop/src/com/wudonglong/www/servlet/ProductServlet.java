@@ -71,15 +71,18 @@ public class ProductServlet extends BaseServlet {
 			e.printStackTrace();
 		}
 		Request req1 = su.getRequest();
+	
 		String name = req1.getParameter("productName");
 		String id = req1.getParameter("parentId");
 		String price = req1.getParameter("productPrice");
 		String introduction = req1.getParameter("productDesc");
 		String stock = req1.getParameter("productStock");
+		String uid = req1.getParameter("uid");
+		int valid = 3;
 		
 		Product newProduct = null;
 		if(price!=null && stock!=null && id!=null){
-			newProduct = new Product(0, name, introduction,Integer.parseInt(price), Integer.parseInt(stock), Integer.parseInt(id.split("-")[0]), Integer.parseInt(id.split("-")[1]), fname);
+			newProduct = new Product(0, name, introduction,Integer.parseInt(price), Integer.parseInt(stock), Integer.parseInt(id.split("-")[0]), Integer.parseInt(id.split("-")[1]), fname,uid,3,null);
 		}
 		
 		//新增
@@ -120,5 +123,99 @@ public class ProductServlet extends BaseServlet {
 		String id = request.getParameter("id");
 		List<Integer> ids = (List<Integer>)session.getAttribute("ids");
 		productService.productdetail(id, ids,request,response);
+	}
+	
+	/**
+	 * 查看用户自己发布的商品
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	public void myProduct(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setCharacterEncoding("utf-8");
+		String uid = request.getParameter("uid");
+		productService.myProduct(uid,request,response);
+	}
+	
+	/**
+	 * 删除商品
+	 * @param request
+	 * @param response
+	 * @throws IOException 
+	 * @throws ServletException 
+	 */
+	public void delete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setCharacterEncoding("utf-8");
+		String id = request.getParameter("id");
+		String uid = request.getParameter("uid");
+		productService.delete(id,uid,request,response);
+	}
+	
+	
+	/**
+	 * 获取要更新商品的信息
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	public void updateshow(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setCharacterEncoding("utf-8");
+		String id = request.getParameter("id");
+		productService.updateshow(id,request,response);
+	}
+	
+	
+	
+	/**
+	 * 修改商品信息
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	public void update(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setCharacterEncoding("utf-8");
+		
+		SmartUpload su = new SmartUpload();
+		
+		su.initialize(this.getServletConfig(), request, response);
+		
+		try {
+			su.upload();
+		} catch (SmartUploadException e) {
+			e.printStackTrace();
+		}
+		
+		Files fs = su.getFiles();//获得所有文件
+		
+		File f = fs.getFile(0);//获得上传的文件
+		
+		String fname = f.getFileName();//获得文件名
+		
+		try {
+			su.save("C:\\Users\\Destiny\\eclipse-workspace\\SecondhandShop\\WebContent\\images\\product");//保存图片到指定位置
+			
+		} catch (SmartUploadException e) {
+			e.printStackTrace();
+		}
+		Request req1 = su.getRequest();
+		String id = req1.getParameter("id");
+		String name = req1.getParameter("productName");
+		String pid = req1.getParameter("parentId");
+		String price = req1.getParameter("productPrice");
+		String introduction = req1.getParameter("productDesc");
+		String stock = req1.getParameter("productStock");
+		String uid = req1.getParameter("uid");
+		String valid = req1.getParameter("valid");
+		
+		Product newProduct = null;
+		if(price!=null && stock!=null && id!=null){
+			newProduct = new Product(Integer.parseInt(id), name, introduction,Integer.parseInt(price), Integer.parseInt(stock), Integer.parseInt(pid.split("-")[0]), Integer.parseInt(pid.split("-")[1]), fname,uid,Integer.parseInt(valid),null);
+		}
+		
+		//修改
+		productService.update(newProduct,request,response);
 	}
 }

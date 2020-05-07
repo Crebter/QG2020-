@@ -30,6 +30,9 @@ function searchHot(name){
 		<c:if test="${sessionScope.user!=null}" >
 			<a href="productAdd.jsp" >上传闲置物品</a>
 		</c:if>
+		<c:if test="${sessionScope.user!=null}">
+			<a href="ProductServlet?method=myProduct&uid=${user.getId() }">我的商品</a>
+		</c:if>
 		<c:if test="${sessionScope.user!=null}" >
 			<a href="update.jsp" >个人信息</a>
 		</c:if>
@@ -96,6 +99,10 @@ function searchHot(name){
 			<form action="ProductServlet?method=add" method="post" enctype="multipart/form-data">
 				<table class="form">
 					<tr>
+						<td class="field">当前用户名:</td>
+						<td><input type="text" class="text" name="uid"  value="${user.getId() }" readonly/></td>
+					</tr>
+					<tr>
 						<td class="field">商品名称：</td>
 						<td><input type="text" class="text" name="productName"  /></td>
 					</tr>
@@ -132,7 +139,7 @@ function searchHot(name){
 					</tr>
 					<tr>
 						<td><a href="ProductServlet?method=selectAll">返回</a></td>
-						<td><label class="ui-blue"><input type="submit" name="submit" value="添加" /></label></td>
+						<td><label class="ui-blue"><input type="submit" name="submit" value="提交审核" /></label></td>
 					</tr>
 				</table>
 			</form>

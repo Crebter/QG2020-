@@ -11,7 +11,7 @@
  Target Server Version : 50721
  File Encoding         : 65001
 
- Date: 06/05/2020 14:40:28
+ Date: 07/05/2020 12:26:46
 */
 
 SET NAMES utf8mb4;
@@ -44,25 +44,25 @@ CREATE TABLE `product`  (
   `childid` int(255) NULL DEFAULT NULL,
   `picture` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `uid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `valid` int(255) NOT NULL,
+  `reason` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 36 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 38 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of product
 -- ----------------------------
-INSERT INTO `product` VALUES (23, '手机', '2', 2, 2, 3, 5, 'aacf07ca26ee9c2f355a10f477d7da25c60e9ff1.jpg_64x64.jpg', '');
-INSERT INTO `product` VALUES (24, '电协', '电协体验营', 200, 3, 4, 15, '体验活动名单.png', '');
-INSERT INTO `product` VALUES (25, '我要传乱七八糟的东西式子', '51', 23, 52, 1, 8, '280d8bd425e5739637e87de70bb6b78861078a7a.jpg', '');
-INSERT INTO `product` VALUES (26, '测试样例', '广工', 22, 11, 2, 13, '4e508d1f7dc8ce4fe11c6408db9ef6854da2a2b6.jpg_64x64.jpg', '');
-INSERT INTO `product` VALUES (27, '11', '2', 2, 2, 2, 14, '14910303263423.png', '');
-INSERT INTO `product` VALUES (28, '6', '2', 6, 1, 1, 10, '561.jpg', '');
-INSERT INTO `product` VALUES (29, '1', '1', 1, 2, 1, 8, '炉石.jpg', '');
-INSERT INTO `product` VALUES (30, '312', '123', 23, 124, 1, 8, '广工军训时间安排.jpg', '');
-INSERT INTO `product` VALUES (31, '45', '12', 564, 5, 1, 8, 'wallhaven-qd3yol.jpg', '');
-INSERT INTO `product` VALUES (32, '54', '265', 34, 65, 1, 8, '广工军训时间安排.jpg', '');
-INSERT INTO `product` VALUES (33, '43', '52', 34, 13, 1, 9, '', '');
-INSERT INTO `product` VALUES (34, '43', '123', 31, 123, 1, 8, '广工正门.jpg', '');
-INSERT INTO `product` VALUES (35, '1245', '5346', 534, 12, 1, 8, 'aacf07ca26ee9c2f355a10f477d7da25c60e9ff1.jpg_64x64.jpg', '');
+INSERT INTO `product` VALUES (23, '笑脸', '2', 2, 2, 1, 8, '。.jpg', 'admin', 1, NULL);
+INSERT INTO `product` VALUES (24, '电协', '电协体验营', 200, 3, 4, 15, '体验活动名单.png', 'admin', 1, NULL);
+INSERT INTO `product` VALUES (25, '您就是列文虎克？', '51', 23, 52, 2, 14, '广工行政楼.jpg', 'admin', 1, NULL);
+INSERT INTO `product` VALUES (26, '测试样例', '广工', 22, 11, 2, 13, '4e508d1f7dc8ce4fe11c6408db9ef6854da2a2b6.jpg_64x64.jpg', 'admin', 1, NULL);
+INSERT INTO `product` VALUES (27, '11', '2', 2, 2, 2, 14, '14910303263423.png', 'admin', 1, NULL);
+INSERT INTO `product` VALUES (29, '1', '1', 1, 2, 1, 8, '炉石.jpg', 'admin', 1, NULL);
+INSERT INTO `product` VALUES (31, '45', '12', 564, 5, 1, 8, 'wallhaven-qd3yol.jpg', 'admin', 1, NULL);
+INSERT INTO `product` VALUES (32, '54', '265', 34, 65, 1, 8, '广工军训时间安排.jpg', 'admin', 1, NULL);
+INSERT INTO `product` VALUES (34, '43', '123', 31, 123, 1, 8, '广工正门.jpg', 'admin', 2, '虚假');
+INSERT INTO `product` VALUES (36, '23', '25', 24, 65, 1, 8, 'wallhaven-x11xmz.jpg', 'admin', 3, NULL);
+INSERT INTO `product` VALUES (37, '大换血成功', '2315', 232, 63, 1, 8, 'wallhaven-96e3jx.png', 'admin', 3, NULL);
 
 -- ----------------------------
 -- Table structure for producttype
@@ -109,13 +109,12 @@ CREATE TABLE `shopcar`  (
   `uid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `valid` int(255) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of shopcar
 -- ----------------------------
-INSERT INTO `shopcar` VALUES (2, 'aacf07ca26ee9c2f355a10f477d7da25c60e9ff1.jpg_64x64.jpg', '手机', 2, 1, 2, 23, 'admin', 1);
-INSERT INTO `shopcar` VALUES (3, 'aacf07ca26ee9c2f355a10f477d7da25c60e9ff1.jpg_64x64.jpg', '手机', 2, 2, 2, 23, 'admin', 1);
+INSERT INTO `shopcar` VALUES (12, '体验活动名单.png', '电协', 200, 1, 3, 24, 'admin', 1);
 
 -- ----------------------------
 -- Table structure for shoporder
@@ -156,6 +155,6 @@ CREATE TABLE `user`  (
 -- Records of user
 -- ----------------------------
 INSERT INTO `user` VALUES ('888', '测试', 'T', '777', '888', '777', '777', '背景', '呼呼呼', 1, '888');
-INSERT INTO `user` VALUES ('admin', '博客', 'T', '2001-02-28', '4400', '4400', '4400', '博客', '博客', 1, '233');
+INSERT INTO `user` VALUES ('admin', '博客', 'T', '2001-02-28', '4400', '4400', '4400', '博客', '博客', 1, 'admin');
 
 SET FOREIGN_KEY_CHECKS = 1;

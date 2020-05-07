@@ -29,6 +29,9 @@
 		<c:if test="${sessionScope.user!=null}" >
 			<a href="productAdd.jsp" >上传闲置物品</a>
 		</c:if>
+		<c:if test="${sessionScope.user!=null}">
+			<a href="ProductServlet?method=myProduct&uid=${user.getId() }">我的商品</a>
+		</c:if>	
 		<c:if test="${sessionScope.user!=null}" >
 			<a href="update.jsp" >个人信息</a>
 		</c:if>
@@ -111,7 +114,8 @@
 						<dl>
 							<dt><a href="ProductServlet?method=productdetail&id=${p.getId() }" target="_blank"><img src="/images/product/${p.getPicture() }" /></a></dt>
 							<dd class="title"><a href="ProductServlet?method=productdetail&id=${p.getId() }" target="_blank">${p.getName() }</a></dd>
-							<dd class="price">￥${p.getPrice() }.00</dd>
+							<dd class="price">￥${p.getPrice() }.00 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;卖家:${p.getUid() }</dd>
+						
 						</dl>
 					</li>
 				</c:forEach>

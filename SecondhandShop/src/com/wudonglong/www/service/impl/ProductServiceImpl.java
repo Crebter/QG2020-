@@ -41,16 +41,16 @@ public class ProductServiceImpl {
 		//查询小分类
 		List<ProductType> slist = productTypeDao.selectSmall();
 		
-//		//查询低价商品
-//		List<Product> tlist = productDao.selectAllByT();
-//		
+		//查询低价商品
+		List<Product> tlist = productDao.selectAllByT();
+		
 //		//查询热卖商品
 //		List<Product> hlist = productDao.selectAllByHot();
 		
 		//传回前端
 		session.setAttribute("blist", blist);
 		session.setAttribute("slist", slist);
-//		session.setAttribute("tlist", tlist);
+		session.setAttribute("tlist", tlist);
 //		session.setAttribute("hlist", hlist);
 		
 		
@@ -223,17 +223,118 @@ public class ProductServiceImpl {
 			lastlylist = productDao.selectAllById(ids);
 			session.setAttribute("lastlylist", lastlylist);
 		}
-		
-		
 
-		
 		Product p = null;
 		if(id != null) {
 			p = productDao.selectById(Integer.parseInt(id));
 		}
-		
+//		System.out.println(p.getUid());
+//		System.out.println(p.getName());
+//		System.out.println(p.getValid());
+
 		session.setAttribute("productDetail", p);
 		request.getRequestDispatcher("productShow.jsp").forward(request, response);
 	}
+	
+	
+	
+	/**
+	 * 查看用户上传的商品
+	 * @param uid
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	public void myProduct(String uid,HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		//查询审核通过的商品
+		List<Product> valid1 = productDao.myProductValid1(uid);
+		
+		//查询审核不通过的商品
+		List<Product> valid2 = productDao.myProductValid2(uid);
+		
+		//查询正在审核的商品
+		List<Product> valid3 = productDao.myProductValid3(uid);
+		
+		session.setAttribute("valid1", valid1);
+		session.setAttribute("valid2", valid2);
+		session.setAttribute("valid3", valid3);
+		
+		request.getRequestDispatcher("myproduct.jsp").forward(request, response);
+
+	}	
+	
+	/**
+	 * 删除商品
+	 * @param id
+	 * @param uid
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	public void delete(String id,String uid,HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		productDao.del(Integer.parseInt(id));
+		myProduct(uid,request,response);
+	}
+	
+	
+	
+	/**
+	 * 获取要更新的商品的信息
+	 * @param id
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	public void updateshow(String id,HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		Product productUpdate = productDao.selectById(Integer.parseInt(id));
+		
+		//查询大分类
+		List<ProductType> blist = productTypeDao.selectBig();
+		
+		//查询小分类
+		List<ProductType> slist = productTypeDao.selectSmall();
+
+		//传回前端
+		session.setAttribute("blist", blist);
+		session.setAttribute("slist", slist);
+		
+		session.setAttribute("productUpdate", productUpdate);
+		request.getRequestDispatcher("productupdate.jsp").forward(request, response);
+
+	}
+	
+	
+	/**
+	 * 修改商品信息
+	 * @param product
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	public void update(Product product,HttpServletRequest request, HttpServletResponse response) throws IOException {
+		boolean flag = productDao.update(product);
+		response.setContentType("text/html; charset=UTF-8");
+		response.setCharacterEncoding("utf-8");
+		PrintWriter out = response.getWriter();
+		if(flag == true) {
+			out.print("<script>");
+			out.print("alert('修改成功');");
+			out.print("history.back();");
+			out.print("</script>");
+			out.close();
+		}else {
+			out.print("<script>");
+			out.print("alert('修改失败');");
+			out.print("history.back();");
+			out.print("</script>");
+			out.close();
+		}
+	}
+
 	
 }

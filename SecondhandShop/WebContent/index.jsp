@@ -30,12 +30,20 @@ function searchHot(name){
 		<c:if test="${sessionScope.user!=null}" >
 			<a href="productAdd.jsp" >上传闲置物品</a>
 		</c:if>
+		<c:if test="${sessionScope.user!=null}">
+			<a href="ProductServlet?method=myProduct&uid=${user.getId() }">我的商品</a>
+		</c:if>
+		<c:if test="${sessionScope.user!=null}">
+			<a href="ProductServlet?method=myProduct&uid=${user.getId() }">我的商品</a>
+		</c:if>
+		
 		<c:if test="${sessionScope.user!=null}" >
 			<a href="update.jsp" >个人信息</a>
 		</c:if>
 		<c:if test="${sessionScope.user!=null}">
 			<a href="selectdd?dd=${user.getId() }">个人订单</a>
 		</c:if>
+
 		
 			<a href="OrderServlet?method=shopcarselectAll" class="shopping">购物车</a>
 			
@@ -104,13 +112,13 @@ function searchHot(name){
 
 	<div class="main">
 		<div class="price-off">
-			<h2 style="font-size:20px;" align="center" >今日特价</h2>
+			<h2 style="font-size:20px;" align="center" >今日低价</h2>
 			<ul class="product clearfix">
-				<c:forEach var="tp" items="${tlist}">
+				<c:forEach var="tp" items="${sessionScope.tlist}">
 					<li>
 						<dl>
-							<dt><a href="selectProductView?id=${tp.getId() }" target="_blank"><img src="D:/upload/${tp.getPicture() }" /></a></dt>
-							<dd class="title"><a href="selectProductView?id=${tp.getId() }" target="_blank">${tp.getIntroduction() }</a></dd>
+							<dt><a href="ProductServlet?method=productdetail&id=${tp.getId() }" target="_blank"><img src="/images/product/${tp.getPicture() }" /></a></dt>
+							<dd class="title"><a href="ProductServlet?method=productdetail&id=${tp.getId() }" target="_blank">${tp.getIntroduction() }</a></dd>
 							<dd class="price">${tp.getPrice() }.00</dd>
 						</dl>
 					</li>

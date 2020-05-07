@@ -105,6 +105,9 @@
 		<c:if test="${sessionScope.user!=null}" >
 			<a href="productAdd.jsp" >上传闲置物品</a>
 		</c:if>
+		<c:if test="${sessionScope.user!=null}">
+			<a href="ProductServlet?method=myProduct&uid=${user.getId() }">我的商品</a>
+		</c:if>
 		<c:if test="${sessionScope.user!=null}" >
 			<a href="update.jsp" >个人信息</a>
 		</c:if>
@@ -185,6 +188,7 @@
 
 			 
 			<div class="buy">
+				<p>卖家：${sessionScope.productDetail.getUid()}</p>
 				<p>商城价：<span class="price">￥${sessionScope.productDetail.getPrice() }.00</span></p>
 				<p>邮递方式：<font color="red">QG快递</font></p>
 				<p>热卖程度：☆☆☆☆☆</p>
