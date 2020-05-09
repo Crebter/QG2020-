@@ -106,9 +106,9 @@ public class ProductTypeDaoImpl implements ProductTypeDao  {
 	 * @param type
 	 * @return
 	 */
-	public boolean delete(ProductType type){
+	public boolean delete(int id){
 		String sql = "delete from producttype where id=?";
-		Object[] params = {type.getId()};
+		Object[] params = {id};
 		return DBUtil.executeUpdate(sql, params);
 	}
 	

@@ -4,16 +4,16 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>猿来入此-二手物品商城- 首页</title>
+<title>登陆</title>
 <link type="text/css" rel="stylesheet" href="css/style.css" />
-<script type="text/javascript" src="js/function.js"></script>
 <script type="text/javascript">
+
 function selectname(){
 	  var name = document.getElementById("selectname").value;
-	  location.href='selectProductList?name='+name;
+	  location.href='ProductServlet?method=selectBypage&name='+name;
 }
 function searchHot(name){
-	location.href='selectProductList?name='+name;
+	location.href='ProductServlet?method=selectBypage&name='+name;
 }
 /*
  * 切换验证码
@@ -22,37 +22,148 @@ function change(){
 	var c = document.getElementById("veryCode");
 	c.src="CodeServlet?num="+Math.random();
 }
+
+
+function FocusItem(obj)
+{
+	obj.parentNode.parentNode.className = "current";
+	var msgBox = obj.parentNode.getElementsByTagName("span")[0];
+	msgBox.innerHTML = "";
+	msgBox.className = "";
+}
+
+
+
+
+
+function CheckItem(obj)
+{
+	obj.parentNode.parentNode.className = "";
+	var msgBox = obj.parentNode.getElementsByTagName("span")[0];
+	switch(obj.name) {
+		case "userName":
+			if(obj.value == "") {
+				msgBox.innerHTML = "用户名不能为空";
+				msgBox.className = "error";
+				return false;
+			}
+			break;
+		case "passWord":
+			if(obj.value == "") {
+				msgBox.innerHTML = "密码不能为空";
+				msgBox.className = "error";
+				return false;
+			}
+			break;
+		case "rePassWord":
+			if(obj.value == "") {
+				msgBox.innerHTML = "确认密码不能为空";
+				msgBox.className = "error";
+				return false;
+			} else if(obj.value != document.getElementById("passWord").value) {
+				msgBox.innerHTML = "两次输入的密码不相同";
+				msgBox.className = "error";
+				return false;
+			}
+			break;
+		case "birthday":
+			if(obj.value == "") {
+				msgBox.innerHTML = "出生日期不能为空";
+				msgBox.className = "error";
+				return false;
+			}
+			break;
+		case "card":
+			if(obj.value == "") {
+				msgBox.innerHTML = "身份证不能为空";
+				msgBox.className = "error";
+				return false;
+			}
+			break;
+		case "email":
+			if(obj.value == "") {
+				msgBox.innerHTML = "邮箱不能为空";
+				msgBox.className = "error";
+				return false;
+			}
+			break;
+		case "phone":
+			if(obj.value == "") {
+				msgBox.innerHTML = "手机号码不能为空";
+				msgBox.className = "error";
+				return false;
+			}
+			break;
+		case "uaddress":
+			if(obj.value == "") {
+				msgBox.innerHTML = "家庭地址不能为空";
+				msgBox.className = "error";
+				return false;
+			}
+			break;
+		case "paddress":
+			if(obj.value == "") {
+				msgBox.innerHTML = "送货地址不能为空";
+				msgBox.className = "error";
+				return false;
+			}
+			break;	
+		case "veryCode":
+			if(obj.value == "") {
+				msgBox.innerHTML = "验证码不能为空";
+				msgBox.className = "error";
+				return false;
+			}
+			break;
+	}
+	return true;
+}
 </script>
 </head>
 <body>
 <div id="header" class="wrap">
 	<div class="help">
-		<c:if test="${SessionScope.user!=null}">
-				<a href="selectdd?dd=${SessionScope.user.id }">个人订单</a>
+		<c:if test="${sessionScope.user!=null}">
+			欢迎您:${sessionScope.user.getId() }
 		</c:if>
-		
-		<c:if test="${SessionScope.user!=null}">当前用户${SessionScope.user.id }
+		<c:if test="${sessionScope.user==null}">
+			你现在的身份是:游客
+		</c:if>	
+		<c:if test="${sessionScope.user!=null}" >
+			<a href="OrderServlet?method=Sold&uid=${user.getId() }" >卖出的宝贝</a>
+		</c:if>
+		<c:if test="${sessionScope.user!=null}" >
+			<a href="OrderServlet?method=Bought&uid=${user.getId() }" >买到的宝贝</a>
+		</c:if>
+		<c:if test="${sessionScope.user!=null}" >
+			<a href="productAdd.jsp" >上传闲置物品</a>
+		</c:if>
+		<c:if test="${sessionScope.user!=null}">
+			<a href="ProductServlet?method=myProduct&uid=${user.getId() }">我的商品</a>
+		</c:if>
+		<c:if test="${sessionScope.user!=null}" >
+			<a href="update.jsp" >个人信息</a>
 		</c:if>
 			<a href="OrderServlet?method=shopcarselectAll" class="shopping">购物车</a>
-		<c:if test="${SessionScope.user==null}">
-				<a href="login.jsp">登录</a>|
-				<a href="register.jsp">注册</a>
+		<c:if test="${sessionScope.user == null}">
+			<a href="login.jsp">登录</a>|<a href="register.jsp">注册</a>
 		</c:if>
-		
-		<c:if test="${SessionScope.user!=null}">
-				<a href="zx">退出</a>
+		<c:if test="${sessionScope.user!=null}">
+			<a href="UserServlet?method=exit">退出登录</a>
 		</c:if>
-		
-		<a href="SelallServlet">留言</a>
-		
-		<c:if test="${SessionScope.user.status==2}">
-				<a href="manage/index.jsp" >去后台</a>
+			<a href="ComplainServlet?method=select">投诉箱</a>
+		<c:if test="${sessionScope.user.getStatus() != 1 && user != null}">
+			<a href="UserServlet?method=admin" >回到后台</a>
 		</c:if>
 	</div>
 	
 	<div class="navbar">
 		<ul class="clearfix">
-			<li class="current"><a href="ProductServlet?method=selectAll">首页</a></li>
+		<!-- 跟首页同一行的大类的展示 -->
+			<li class="current" ><a href="ProductServlet?method=selectAll">首页</a></li>
+			<c:forEach var="b" items="${sessionScope.blist}">
+			<li><a href="ProductServlet?method=selectBypage&id=${b.getId() }">${b.getName() }</a></li>
+			</c:forEach>
 		</ul>
 	</div>
 </div>
@@ -76,7 +187,7 @@ function change(){
 		<em class="corner lb"></em>
 		<em class="corner rt"></em>
 		<div class="box">
-			<h1>欢迎来到交易商城</h1>
+			<h1>欢迎光临QG闲鱼</h1>
 			<form id="loginForm" method="post" action="UserServlet?method=login" onsubmit="return checkForm(this)">
 				<table>
 					<tr>
@@ -89,7 +200,7 @@ function change(){
 					</tr>
 					<tr>
 						<td class="field">验证码：</td>
-						<td><input class="text verycode" type="text" name="veryCode" onfocus="FocusItem(this)" onblur="Checknum(this);" /><img style="width:200px;"id="veryCode"   src="CodeServlet" onclick="change()" />
+						<td><input class="text verycode" type="text" name="veryCode" /><img style="width:200px;"id="veryCode"   src="CodeServlet" onclick="change()" />
 							<span id="msg"></span></td>
 					</tr>
 					<tr>

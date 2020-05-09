@@ -4,16 +4,16 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>猿来入此-二手物品商城- 首页</title>
+<title>找回密码</title>
 <link type="text/css" rel="stylesheet" href="css/style.css" />
-<script type="text/javascript" src="js/function.js"></script>
 <script type="text/javascript">
+
 function selectname(){
 	  var name = document.getElementById("selectname").value;
-	  location.href='selectProductList?name='+name;
+	  location.href='ProductServlet?method=selectBypage&name='+name;
 }
 function searchHot(name){
-	location.href='selectProductList?name='+name;
+	location.href='ProductServlet?method=selectBypage&name='+name;
 }
 /*
  * 切换验证码
@@ -27,32 +27,47 @@ function change(){
 <body>
 <div id="header" class="wrap">
 	<div class="help">
-		<c:if test="${SessionScope.user!=null}">
-				<a href="selectdd?dd=${SessionScope.user.id }">个人订单</a>
+		<c:if test="${sessionScope.user!=null}">
+			欢迎您:${sessionScope.user.getId() }
 		</c:if>
-		
-		<c:if test="${SessionScope.user!=null}">当前用户${SessionScope.user.id }
+		<c:if test="${sessionScope.user==null}">
+			你现在的身份是:游客
+		</c:if>	
+		<c:if test="${sessionScope.user!=null}" >
+			<a href="OrderServlet?method=Sold&uid=${user.getId() }" >卖出的宝贝</a>
+		</c:if>
+		<c:if test="${sessionScope.user!=null}" >
+			<a href="OrderServlet?method=Bought&uid=${user.getId() }" >买到的宝贝</a>
+		</c:if>
+		<c:if test="${sessionScope.user!=null}" >
+			<a href="productAdd.jsp" >上传闲置物品</a>
+		</c:if>
+		<c:if test="${sessionScope.user!=null}">
+			<a href="ProductServlet?method=myProduct&uid=${user.getId() }">我的商品</a>
+		</c:if>
+		<c:if test="${sessionScope.user!=null}" >
+			<a href="update.jsp" >个人信息</a>
 		</c:if>
 			<a href="OrderServlet?method=shopcarselectAll" class="shopping">购物车</a>
-		<c:if test="${SessionScope.user==null}">
-				<a href="login.jsp">登录</a>|
-				<a href="register.jsp">注册</a>
+		<c:if test="${sessionScope.user == null}">
+			<a href="login.jsp">登录</a>|<a href="register.jsp">注册</a>
 		</c:if>
-		
-		<c:if test="${SessionScope.user!=null}">
-				<a href="zx">退出</a>
+		<c:if test="${sessionScope.user!=null}">
+			<a href="UserServlet?method=exit">退出登录</a>
 		</c:if>
-		
-		<a href="SelallServlet">留言</a>
-		
-		<c:if test="${SessionScope.user.status==2}">
-				<a href="manage/index.jsp" >去后台</a>
+			<a href="ComplainServlet?method=select">投诉箱</a>
+		<c:if test="${sessionScope.user.getStatus() != 1 && user != null}">
+			<a href="UserServlet?method=admin" >回到后台</a>
 		</c:if>
 	</div>
 	
 	<div class="navbar">
 		<ul class="clearfix">
-			<li class="current"><a href="ProductServlet?method=selectAll">首页</a></li>
+		<!-- 跟首页同一行的大类的展示 -->
+			<li class="current" ><a href="ProductServlet?method=selectAll">首页</a></li>
+			<c:forEach var="b" items="${sessionScope.blist}">
+			<li><a href="ProductServlet?method=selectBypage&id=${b.getId() }">${b.getName() }</a></li>
+			</c:forEach>
 		</ul>
 	</div>
 </div>

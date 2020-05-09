@@ -481,7 +481,7 @@ public class ProductDaoImpl implements ProductDao{
 	public  List<Product> selectAllByT(){
 			List<Product> products = new ArrayList<>();
 			ResultSet rs = null;
-			String sql = "select * from product where valid=1 order by price asc limit 0,9";
+			String sql = "select * from product where valid=1 order by price asc limit 0,8";
 			rs = DBUtil.excuteQuery(sql, null);
 			try {
 				while(rs.next()) {
@@ -509,13 +509,13 @@ public class ProductDaoImpl implements ProductDao{
 	}
 	
 	/**
-	 * 查询热卖商品
+	 * 按库存排行查询
 	 * @return
 	 */
-	public  List<Product> selectAllByHot(){
+	public  List<Product> selectAllByStock(){
 			List<Product> products = new ArrayList<>();
 			ResultSet rs = null;
-			String sql = "select * from ( select tab1.* from ( select * from product a, ( select id pid,sum(quantity) buysum from orderdetail group by id order by sum(quantity) desc) b where a.id=b.pid order by buysum desc ) tab1) tab2 limit 0,8";
+			String sql = "select * from product where valid=1 order by stock desc limit 0,12 ";
 			rs = DBUtil.excuteQuery(sql, null);
 			try {
 				while(rs.next()) {
@@ -660,11 +660,80 @@ public class ProductDaoImpl implements ProductDao{
 	 * @param id
 	 * @return
 	 */
-	public boolean updateStock(int stock,int id) {
+	public boolean updateStock(int quantity,int id) {
 		String sql ="update product set stock=stock-? where id=? and valid=1";
-		Object[] params = {stock,id};
+		Object[] params = {quantity,id};
 		return DBUtil.executeUpdate(sql, params);
 	}
 	
+	/**
+	 * 取消订单,库存加上购买数量
+	 * @param quantity
+	 * @param id
+	 * @return
+	 */
+	public boolean addStock(int quantity,int id) {
+		String sql ="update product set stock=stock+? where id=? ";
+		Object[] params = {quantity,id};
+		return DBUtil.executeUpdate(sql, params);
+	}
 	
+	/**
+	 * 查出所有待审核的商品
+	 * @return
+	 */
+	public List<Product> selectAudit() {
+		List<Product> products = new ArrayList<>();
+		ResultSet rs = null;
+		String sql = "select * from product where valid=3";
+		rs = DBUtil.excuteQuery(sql, null);
+		try {
+				while(rs.next()) {
+						Product product = new Product(
+								rs.getInt("id"),
+								rs.getString("name"),
+								rs.getString("introduction"),
+								rs.getInt("price"),
+								rs.getInt("stock"),
+								rs.getInt("parentid"),
+								rs.getInt("childid"),
+								rs.getString("picture"),
+								rs.getString("uid"),
+								rs.getInt("valid"),
+								rs.getString("reason"));
+					products.add(product);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return null;
+			}finally {
+				DBUtil.closeAll(rs, DBUtil.pstmt, DBUtil.con);
+			}
+		return products;
+	}
+	
+	/**
+	 * 更新商品信息
+	 * @param id
+	 * @param valid
+	 * @return
+	 */
+	public boolean updateValid(int id,int valid) {
+		String sql = "update product set valid=? where id=?";
+		Object[] params = {valid,id};
+		return DBUtil.executeUpdate(sql, params);
+	}
+
+	/**
+	 * 拒绝商品上传
+	 * @param id
+	 * @param valid
+	 * @param reason
+	 * @return
+	 */
+	public boolean refuse(int id,int valid,String reason) {
+		String sql = "update product set valid=?,reason=? where id=?";
+		Object[] params = {valid,reason,id};
+		return DBUtil.executeUpdate(sql, params);
+	}
 }

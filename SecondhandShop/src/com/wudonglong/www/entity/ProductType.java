@@ -12,6 +12,10 @@ public class ProductType implements Serializable{
 
 	}
 	
+	public ProductType(String name, int parentid) {
+		this.name = name;
+		this.parentid = parentid;
+	}
 	
 	
 	

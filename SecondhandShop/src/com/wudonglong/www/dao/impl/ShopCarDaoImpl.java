@@ -5,10 +5,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.wudonglong.www.dao.ShopCarDao;
 import com.wudonglong.www.entity.ShopCar;
 import com.wudonglong.www.util.DBUtil;
 
-public class ShopCarDaoImpl {
+public class ShopCarDaoImpl implements ShopCarDao{
 	
 	
 	/**
@@ -33,7 +34,8 @@ public class ShopCarDaoImpl {
 													rs.getInt("stock"),
 													rs.getInt("pid"),
 													rs.getString("uid"),
-													rs.getInt("valid")    );
+													rs.getInt("valid"),    
+													rs.getString("seller") );
 					shopCars.add(shopCar);
 				}
 			} catch (SQLException e) {
@@ -86,8 +88,8 @@ public class ShopCarDaoImpl {
 	 * @return
 	 */
 	public boolean insertShopCar(ShopCar shopCar) {
-		String sql = "insert into shopcar value(null,?,?,?,?,?,?,?,1)";
-		Object[] params = {shopCar.getPicture(),shopCar.getPname(),shopCar.getPrice(),shopCar.getQuantity(),shopCar.getStock(),shopCar.getPid(),shopCar.getUid()};
+		String sql = "insert into shopcar value(null,?,?,?,?,?,?,?,?,?)";
+		Object[] params = {shopCar.getPicture(),shopCar.getPname(),shopCar.getPrice(),shopCar.getQuantity(),shopCar.getStock(),shopCar.getPid(),shopCar.getUid(),shopCar.getValid(),shopCar.getSeller()};
 		return DBUtil.executeUpdate(sql, params);
 	}
 	

@@ -5,9 +5,8 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>QG闲鱼网首页</title>
+<title>我发布的商品</title>
 <link type="text/css" rel="stylesheet" href="css/style.css" />
-<script type="text/javascript" src="js/function.js"></script>
 <script language="javascript">
 
 function selectname(){
@@ -27,39 +26,34 @@ function searchHot(name){
 		<c:if test="${sessionScope.user!=null}">
 			欢迎您:${sessionScope.user.getId() }
 		</c:if>
+		<c:if test="${sessionScope.user==null}">
+			你现在的身份是:游客
+		</c:if>	
+		<c:if test="${sessionScope.user!=null}" >
+			<a href="OrderServlet?method=Sold&uid=${user.getId() }" >卖出的宝贝</a>
+		</c:if>
+		<c:if test="${sessionScope.user!=null}" >
+			<a href="OrderServlet?method=Bought&uid=${user.getId() }" >买到的宝贝</a>
+		</c:if>
 		<c:if test="${sessionScope.user!=null}" >
 			<a href="productAdd.jsp" >上传闲置物品</a>
 		</c:if>
 		<c:if test="${sessionScope.user!=null}">
 			<a href="ProductServlet?method=myProduct&uid=${user.getId() }">我的商品</a>
 		</c:if>
-		
 		<c:if test="${sessionScope.user!=null}" >
 			<a href="update.jsp" >个人信息</a>
 		</c:if>
-		<c:if test="${sessionScope.user!=null}">
-			<a href="selectdd?dd=${user.getId() }">个人订单</a>
-		</c:if>
-
-		
 			<a href="OrderServlet?method=shopcarselectAll" class="shopping">购物车</a>
-			
-			
-			
 		<c:if test="${sessionScope.user == null}">
 			<a href="login.jsp">登录</a>|<a href="register.jsp">注册</a>
 		</c:if>
 		<c:if test="${sessionScope.user!=null}">
 			<a href="UserServlet?method=exit">退出登录</a>
 		</c:if>
-		
-		
-			<a href="SelallServlet">留言</a>
-		<c:if test="${sessionScope.user.getStatus() == 2}">
-			<a href="manage/index.jsp" >去后台</a>
-		
-		
-		
+			<a href="ComplainServlet?method=select">投诉箱</a>
+		<c:if test="${sessionScope.user.getStatus() != 1 && user != null}">
+			<a href="UserServlet?method=admin" >回到后台</a>
 		</c:if>
 	</div>
 	
@@ -152,16 +146,14 @@ function searchHot(name){
 						<tr>
 							<td class="first w4 c">${v3.getId() }</td>
 							<td class="thumb"><img src="/images/product/${v3.getPicture() }" width="80" height="80"/><a href="ProductServlet?method=productdetail&id=${v3.getId() }" target="_blank">${v3.getName() }</a></td>
-							<td class="w1 c"><a href="toProductUpdate?id=${v3.getId() }">修改</a> <a href="ProductServlet?method=delete&id=${v3.getId() }&uid=${sessionScope.user.getId()}">删除</a></td>
+							<td class="w1 c"><a href="ProductServlet?method=updateshow&id=${v3.getId() }">修改</a> <a href="ProductServlet?method=delete&id=${v3.getId() }&uid=${sessionScope.user.getId()}">删除</a></td>
 						</tr>
 					</c:forEach>
 				</table>
 				
 			</div>
-		</div>
-			
-	</div>		
-</div>
+		</div>	
+</div>		
 
 
 </body>

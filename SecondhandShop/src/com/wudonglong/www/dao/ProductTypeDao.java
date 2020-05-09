@@ -1,10 +1,13 @@
 package com.wudonglong.www.dao;
 
+
 import java.util.List;
 
 import com.wudonglong.www.entity.ProductType;
 
 public interface ProductTypeDao {
+
+	
 
 	
 	/**
@@ -36,6 +39,7 @@ public interface ProductTypeDao {
 	 * @return
 	 */
 	public boolean insertBig(ProductType type);
+	
 	/**
 	 * 分局ID修改分类信息
 	 * @param type
@@ -43,12 +47,13 @@ public interface ProductTypeDao {
 	 */
 	public boolean update(ProductType type);
 	
+	
 	/**
 	 * 根据ID删除一个分类
 	 * @param type
 	 * @return
 	 */
-	public boolean delete(ProductType type);
+	public boolean delete(int id);
 	
 	
 	/**
@@ -63,5 +68,6 @@ public interface ProductTypeDao {
 	 * @return
 	 */
 	public List<ProductType> selectSmall();
+	
 	
 }

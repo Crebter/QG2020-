@@ -224,6 +224,41 @@ public class UserDaoImpl implements UserDao {
 			Object[] params = { password,id};
 			return DBUtil.executeUpdate(sql, params);
 		}
+		
+		
+		/**
+		 * 查询所有用户
+		 * @return
+		 */
+		public ArrayList<User> selectAll(){
+			ArrayList<User> users = new ArrayList<>();
+			User user = null;
+			ResultSet rs = null;
+			String sql = "select * from user ";
+			rs = DBUtil.excuteQuery(sql, null);
+			try {
+				while(rs.next()) {
+					user = new User(rs.getString("id"),				
+							rs.getString("username"),
+							rs.getString("password"),
+							rs.getString("sex"),
+							rs.getString("birthday"),
+							rs.getString("card"),
+							rs.getString("email"),
+							rs.getString("phone"),
+							rs.getString("uaddress"),
+							rs.getString("paddress"),
+							rs.getInt("status"));
+					users.add(user);
+				}
+				return users;
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return null;
+			}finally {
+				DBUtil.closeAll(rs, DBUtil.pstmt, DBUtil.con);
+			}
+		}
 	
 	
 }

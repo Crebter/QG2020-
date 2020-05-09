@@ -59,4 +59,14 @@
     <servlet-name>OrderServlet</servlet-name>
     <url-pattern>/OrderServlet</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>ComplainServlet</display-name>
+    <servlet-name>ComplainServlet</servlet-name>
+    <servlet-class>com.wudonglong.www.servlet.ComplainServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ComplainServlet</servlet-name>
+    <url-pattern>/ComplainServlet</url-pattern>
+  </servlet-mapping>
 </web-app>

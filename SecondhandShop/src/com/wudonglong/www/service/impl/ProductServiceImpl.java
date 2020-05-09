@@ -16,8 +16,9 @@ import com.wudonglong.www.dao.impl.ProductDaoImpl;
 import com.wudonglong.www.dao.impl.ProductTypeDaoImpl;
 import com.wudonglong.www.entity.Product;
 import com.wudonglong.www.entity.ProductType;
+import com.wudonglong.www.service.ProductService;
 
-public class ProductServiceImpl {
+public class ProductServiceImpl implements ProductService{
 	
 	  ProductTypeDao productTypeDao = new ProductTypeDaoImpl();
 	  ProductDao productDao = new ProductDaoImpl();
@@ -44,14 +45,14 @@ public class ProductServiceImpl {
 		//查询低价商品
 		List<Product> tlist = productDao.selectAllByT();
 		
-//		//查询热卖商品
-//		List<Product> hlist = productDao.selectAllByHot();
+		//查询库存多的商品
+		List<Product> stocklist = productDao.selectAllByStock();
 		
 		//传回前端
 		session.setAttribute("blist", blist);
 		session.setAttribute("slist", slist);
 		session.setAttribute("tlist", tlist);
-//		session.setAttribute("hlist", hlist);
+		session.setAttribute("stocklist", stocklist);
 		
 		
 		
@@ -335,6 +336,150 @@ public class ProductServiceImpl {
 			out.close();
 		}
 	}
+	
+
+	/**
+	 * 查询大分类,用于增加小分类
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 * @throws ServletException
+	 */
+	public void addSmall(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		//查询打分类
+		List<ProductType> Blist = productTypeDao.selectBig();
+		
+		request.getSession().setAttribute("Blist", Blist);
+		request.getRequestDispatcher("productTypeAdd.jsp").forward(request, response);
+	}
+	
+	/**
+	 * 执行增加小分类
+	 * @param parentId
+	 * @param name
+	 * @param request
+	 * @param response
+	 * @throws IOException 
+	 */
+	public void doAddSmall(String parentId,String name,HttpServletRequest request, HttpServletResponse response) throws IOException {
+		ProductType type = new ProductType(name,Integer.parseInt(parentId));
+		boolean flag = productTypeDao.insertSmall(type);
+		response.setContentType("text/html; charset=UTF-8");
+		response.setCharacterEncoding("utf-8");
+		PrintWriter out = response.getWriter();
+		if(flag == true) {
+			out.print("<script>");
+			out.print("alert('增加成功');");
+			out.print("location.href='UserServlet?method=admin';");
+			out.print("</script>");
+			out.close();
+		}else {
+			out.print("<script>");
+			out.print("alert('增加失败');");
+			out.print("location.href='UserServlet?method=admin';");
+			out.print("</script>");
+			out.close();
+		}
+	}
+	
+	
+	/**
+	 * 删除一个小分类
+	 * @param id
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	public void deleteSmall(String id,HttpServletRequest request, HttpServletResponse response) throws IOException {
+		boolean flag = productTypeDao.delete(Integer.parseInt(id));
+		response.setContentType("text/html; charset=UTF-8");
+		response.setCharacterEncoding("utf-8");
+		PrintWriter out = response.getWriter();
+		if(flag == true) {
+			out.print("<script>");
+			out.print("alert('删除成功');");
+			out.print("location.href='UserServlet?method=admin';");
+			out.print("</script>");
+			out.close();
+		}else {
+			out.print("<script>");
+			out.print("alert('删除失败');");
+			out.print("location.href='UserServlet?method=admin';");
+			out.print("</script>");
+			out.close();
+		}
+	}
+	
+	/**
+	 * 更新商品权限
+	 * @param id
+	 * @param valid
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	public void updateValid(String id,String valid,HttpServletRequest request, HttpServletResponse response) throws IOException {
+		boolean flag = productDao.updateValid(Integer.parseInt(id), Integer.parseInt(valid));
+		response.setContentType("text/html; charset=UTF-8");
+		response.setCharacterEncoding("utf-8");
+		PrintWriter out = response.getWriter();
+		if(flag == true) {
+			out.print("<script>");
+			out.print("alert('更新成功');");
+			out.print("location.href='UserServlet?method=admin';");
+			out.print("</script>");
+			out.close();
+		}else {
+			out.print("<script>");
+			out.print("alert('更新失败');");
+			out.print("location.href='UserServlet?method=admin';");
+			out.print("</script>");
+			out.close();
+		}
+	}
+	
+	/**
+	 * 查出拒绝的商品的信息
+	 * @param id
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 * @throws ServletException
+	 */
+	public void refuse(String id,HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		Product updateProduct = productDao.selectById(Integer.parseInt(id));
+		request.getSession().setAttribute("updateProduct", updateProduct);
+		request.getRequestDispatcher("refuse.jsp").forward(request, response);
+	}
+	
+	
+	/**
+	 * 执行拒绝商品上传
+	 * @param id
+	 * @param reason
+	 * @param request
+	 * @param response
+	 * @throws IOException 
+	 */
+	public void doRefuse(String id,String reason,HttpServletRequest request, HttpServletResponse response) throws IOException {
+		boolean flag = productDao.refuse(Integer.parseInt(id),2, reason);
+		response.setContentType("text/html; charset=UTF-8");
+		response.setCharacterEncoding("utf-8");
+		PrintWriter out = response.getWriter();
+		if(flag == true) {
+			out.print("<script>");
+			out.print("alert('执行成功');");
+			out.print("location.href='UserServlet?method=admin';");
+			out.print("</script>");
+			out.close();
+		}else {
+			out.print("<script>");
+			out.print("alert('执行失败');");
+			out.print("location.href='UserServlet?method=admin';");
+			out.print("</script>");
+			out.close();
+		}
+	}
 
 	
-}
+}	

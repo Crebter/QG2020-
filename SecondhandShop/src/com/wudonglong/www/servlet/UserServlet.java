@@ -10,8 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-
-
+import com.ndktools.javamd5.core.MD5;
 import com.wudonglong.www.entity.User;
 import com.wudonglong.www.service.UserService;
 import com.wudonglong.www.service.impl.UserServiceImpl;
@@ -34,7 +33,9 @@ public class UserServlet extends BaseServlet {
 		
 		//接受前端数据
 		String id = request.getParameter("userName");
-		String password = request.getParameter("passWord");
+		MD5 pwd = new MD5();
+		String password = pwd.getMD5ofStr(request.getParameter("passWord")).toString();
+//		System.out.println(password);
 		String veryCode = request.getParameter("veryCode");
 
 		//获得CodeServlet生成的验证码(在session域里)
@@ -59,7 +60,8 @@ public class UserServlet extends BaseServlet {
 		
 		String id = request.getParameter("userName");
 		String username = request.getParameter("name");
-		String password = request.getParameter("rePassWord");
+		MD5 pwd = new MD5();
+		String password = pwd.getMD5ofStr(request.getParameter("rePassWord")).toString();
 		String sex = request.getParameter("sex");
 		String birthday = request.getParameter("birthday");
 		String card = request.getParameter("card");
@@ -122,7 +124,8 @@ public class UserServlet extends BaseServlet {
 			
 			String id = request.getParameter("userName");
 			String username = request.getParameter("name");
-			String password = request.getParameter("passWord");
+			MD5 pwd = new MD5();
+			String password = pwd.getMD5ofStr(request.getParameter("passWord")).toString();			
 			String sex = request.getParameter("sex");
 			String birthday = request.getParameter("birthday");
 			String card = request.getParameter("card");
@@ -158,7 +161,8 @@ public class UserServlet extends BaseServlet {
 		public void check(HttpServletRequest request, HttpServletResponse response) throws IOException {
 			request.setCharacterEncoding("utf-8");
 			String id = request.getParameter("userName");
-			String password = request.getParameter("rePassWord");
+			MD5 pwd = new MD5();
+			String password = pwd.getMD5ofStr(request.getParameter("rePassWord")).toString();	
 			String card = request.getParameter("card");
 			String email = request.getParameter("email");
 			String code = request.getParameter("veryCode");
@@ -166,10 +170,32 @@ public class UserServlet extends BaseServlet {
 		}
 	
 	
+		/**
+		 * 管理员身份
+		 * @param request
+		 * @param response
+		 * @throws IOException 
+		 * @throws ServletException 
+		 */
+		public void admin(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+			request.setCharacterEncoding("utf-8");
+			userService.admin(request, response);
+		}
 	
+		/**
+		 * 根据ID删除用户,并且跳转页面
+		 * @param request
+		 * @param response
+		 * @throws ServletException
+		 * @throws IOException
+		 */
+		public void deleteById(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+			request.setCharacterEncoding("utf-8");
+			String uid = request.getParameter("id");
+			userService.deleteById(uid, request, response);
+		}
 	
-	
-	}	
+}	
 
 	
 	

@@ -6,9 +6,8 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>商品</title>
+<title>购物车</title>
 <link type="text/css" rel="stylesheet" href="css/style.css" />
-<script type="text/javascript" src="js/function.js"></script>
 <script type="text/javascript">
 
 	function selectname(){
@@ -146,6 +145,15 @@
 		<c:if test="${sessionScope.user!=null}">
 			欢迎您:${sessionScope.user.getId() }
 		</c:if>
+		<c:if test="${sessionScope.user==null}">
+			你现在的身份是:游客
+		</c:if>	
+		<c:if test="${sessionScope.user!=null}" >
+			<a href="OrderServlet?method=Sold&uid=${user.getId() }" >卖出的宝贝</a>
+		</c:if>
+		<c:if test="${sessionScope.user!=null}" >
+			<a href="OrderServlet?method=Bought&uid=${user.getId() }" >买到的宝贝</a>
+		</c:if>
 		<c:if test="${sessionScope.user!=null}" >
 			<a href="productAdd.jsp" >上传闲置物品</a>
 		</c:if>
@@ -155,28 +163,16 @@
 		<c:if test="${sessionScope.user!=null}" >
 			<a href="update.jsp" >个人信息</a>
 		</c:if>
-		<c:if test="${sessionScope.user!=null}">
-			<a href="selectdd?dd=${user.getId() }">个人订单</a>
-		</c:if>
-		
 			<a href="OrderServlet?method=shopcarselectAll" class="shopping">购物车</a>
-			
-			
-			
 		<c:if test="${sessionScope.user == null}">
 			<a href="login.jsp">登录</a>|<a href="register.jsp">注册</a>
 		</c:if>
 		<c:if test="${sessionScope.user!=null}">
 			<a href="UserServlet?method=exit">退出登录</a>
 		</c:if>
-		
-		
-			<a href="SelallServlet">留言</a>
-		<c:if test="${sessionScope.user.getStatus() == 2}">
-			<a href="manage/index.jsp" >去后台</a>
-		
-		
-		
+			<a href="ComplainServlet?method=select">投诉箱</a>
+		<c:if test="${sessionScope.user.getStatus() != 1 && user != null}">
+			<a href="UserServlet?method=admin" >回到后台</a>
 		</c:if>
 	</div>
 	
@@ -208,7 +204,8 @@
 
 <div class="wrap">
 	<div id="shopping">
-		<form action="gmServlet">
+		<h3 style="color:red; font-size:15px" >tip:结算时购物车的所有东西都会结算,如果不需要请删掉</h3>
+		<form action="OrderServlet?method=createOrder" method="post">
 		
 			<table>
 				<tr>
@@ -221,7 +218,7 @@
 					
 					<tr id="product_id_1">
 						<td class="thumb"><input type="checkbox" name="op" onclick="calculate()" /><img src="/images/product/${cars.getPicture() }" height="100" width="100" />
-						<a href="ProductServlet?method=productdetail&id=${cars.getPid()}">${rs.getPname() }</a></td>
+						<a href="ProductServlet?method=productdetail&id=${cars.getPid()}">${cars.getPname() }</a></td>
 						<td class="price" id="price_id_1">
 							<span id="priceText" name="priceText" >${cars.getPrice()}</span><!-- 商品单价 --><input type="hidden" name="sPPrice" value="${cars.getPrice()}" />
 							<input type="hidden" value="99" />

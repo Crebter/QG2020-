@@ -1,5 +1,6 @@
 package com.wudonglong.www.dao;
 
+
 import java.util.ArrayList;
 
 import com.wudonglong.www.entity.User;
@@ -23,6 +24,7 @@ public interface UserDao {
 	 */
 	public User queryUserByID(String id);
 	
+	
 	/**
 	 * @describe 查看是否有此人
 	 * @param id
@@ -37,14 +39,15 @@ public interface UserDao {
 
 	
 	
-	
 	/**
 	 * 判断账号密码是否正确，并且获得用户的所有信息
 	 * @param name
 	 * @param pwd
 	 * @return
+	 * @Date 2020-04-30
 	 */
 	public User selectAdmin(String id,String password);
+	
 	
 		/**
 		 * 增加用户
@@ -70,7 +73,7 @@ public interface UserDao {
 		 */
 		public boolean deleteUserByID(String id);
 		
-		
+	
 		/**
 		 * 忘记密码
 		 * @param id
@@ -79,18 +82,21 @@ public interface UserDao {
 		 * @return
 		 */
 		public User check(String id,String card,String email);
-
 		
-
+	
 		/**
-		 * 修改密码
-		 * @param id
-		 * @param password
+		 * 更新密码
+		 * @param user
 		 * @return
 		 */
 		public boolean updatePassword(String id,String password);
-
 		
+		
+		/**
+		 * 查询所有用户
+		 * @return
+		 */
+		public ArrayList<User> selectAll();
 	
 	
 }

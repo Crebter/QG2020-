@@ -218,4 +218,91 @@ public class ProductServlet extends BaseServlet {
 		//修改
 		productService.update(newProduct,request,response);
 	}
+	
+	
+	/**
+	 * 增加商品的小分类
+	 * @param request
+	 * @param response
+	 * @throws ServletException 
+	 * @throws IOException 
+	 */
+	public void addSmall(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		request.setCharacterEncoding("utf-8");
+		productService.addSmall(request,response);
+	}
+	
+	
+	/**
+	 * 执行增加小分类
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 * @throws ServletException
+	 */
+	public void doAddSmall(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		request.setCharacterEncoding("utf-8");
+		String parentId = request.getParameter("parentId");
+		
+		String name = request.getParameter("name");
+//		System.out.println(parentId);
+//		System.out.println(name);
+		productService.doAddSmall(parentId,name,request,response);
+	}
+	
+	/**
+	 * 删除小分类
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 * @throws ServletException
+	 */
+	public void deleteSmall(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		request.setCharacterEncoding("utf-8");
+		String id = request.getParameter("id");
+		productService.deleteSmall(id,request,response);
+	}
+	
+	
+	/**
+	 * 更新商品的权限
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 * @throws ServletException
+	 */
+	public void updateValid(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		request.setCharacterEncoding("utf-8");
+		String id = request.getParameter("id");
+		String valid = request.getParameter("valid");
+		productService.updateValid(id,valid,request,response);
+	}
+	
+	/**
+	 * 拒绝用户上传商品,查出该商品信息
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 * @throws ServletException
+	 */
+	public void refuse(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		request.setCharacterEncoding("utf-8");
+		String id = request.getParameter("id");
+		productService.refuse(id,request,response);
+	}
+	
+	
+	/**
+	 * 执行拒绝商品上传
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 * @throws ServletException
+	 */
+	public void doRefuse(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		request.setCharacterEncoding("utf-8");
+		String id = request.getParameter("id");
+		String reason = request.getParameter("reason");
+		productService.doRefuse(id,reason,request,response);
+	}
 }

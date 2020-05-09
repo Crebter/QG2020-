@@ -5,10 +5,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.wudonglong.www.dao.ShopOrderDao;
 import com.wudonglong.www.entity.ShopOrder;
 import com.wudonglong.www.util.DBUtil;
 
-public class ShopOrderDaoImpl {
+public class ShopOrderDaoImpl implements ShopOrderDao{
 
 	/**
 	 * 查出所有订单
@@ -23,13 +24,15 @@ public class ShopOrderDaoImpl {
 			while (rs.next()) {
 				ShopOrder shopOrder = new ShopOrder(
 						rs.getInt("id"),
-						rs.getString("userid"),
-						rs.getString("username"),
-						rs.getString("useraddress"),
+						rs.getString("uid"),
+						rs.getString("uaddress"),
 						rs.getString("createtime"),
 						rs.getInt("cost"),
 						rs.getInt("status"),
-						rs.getInt("type"));
+						rs.getInt("type"),
+						rs.getString("seller"),
+						rs.getInt("quantity"),
+						rs.getInt("pid"));
 				shopOrders.add(shopOrder);
 			}
 		} catch (SQLException e) {
@@ -56,13 +59,15 @@ public class ShopOrderDaoImpl {
 			while (rs.next()) {
 				shopOrder = new ShopOrder(
 						rs.getInt("id"),
-						rs.getString("userid"),
-						rs.getString("username"),
-						rs.getString("useraddress"),
+						rs.getString("uid"),
+						rs.getString("uaddress"),
 						rs.getString("createtime"),
 						rs.getInt("cost"),
 						rs.getInt("status"),
-						rs.getInt("type"));
+						rs.getInt("type"),
+						rs.getString("seller"),
+						rs.getInt("quantity"),
+						rs.getInt("pid"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -106,13 +111,15 @@ public class ShopOrderDaoImpl {
 				while(rs.next()) {
 					ShopOrder shopOrder = new ShopOrder(
 							rs.getInt("id"),
-							rs.getString("userid"),
-							rs.getString("username"),
-							rs.getString("useraddress"),
+							rs.getString("uid"),
+							rs.getString("uaddress"),
 							rs.getString("createtime"),
 							rs.getInt("cost"),
 							rs.getInt("status"),
-							rs.getInt("type"));
+							rs.getInt("type"),
+							rs.getString("seller"),
+							rs.getInt("quantity"),
+							rs.getInt("pid"));
 					shopOrders.add(shopOrder);
 				}
 			} catch (SQLException e) {
@@ -125,13 +132,13 @@ public class ShopOrderDaoImpl {
 	}
 	
 	/**
-	 * 插入订单信息
+	 * 生成订单信息
 	 * @param shopOrder
 	 * @return
 	 */
 	public  boolean insert(ShopOrder shopOrder){
-		String sql="insert into shoporder values(null,?,?,?,?,?,?)";
-		Object[] params={shopOrder.getUserid(),shopOrder.getUsername(),shopOrder.getUseraddress(),shopOrder.getCreatetime(),shopOrder.getCost(),shopOrder.getStatus(),shopOrder.getType()};
+		String sql="insert into shoporder values(null,?,?,now(),?,?,?,?,?,?)";
+		Object[] params={shopOrder.getUid(),shopOrder.getUaddress(),shopOrder.getCost(),shopOrder.getStatus(),shopOrder.getType(),shopOrder.getSeller(),shopOrder.getQuantity(),shopOrder.getPid()};
 		return DBUtil.executeUpdate(sql, params);
 	}
 	
@@ -141,8 +148,8 @@ public class ShopOrderDaoImpl {
 	 * @return
 	 */
 	public  boolean update(ShopOrder shopOrder){
-		String sql="update shoporder set username=?,useraddress=?,cost=?,status=? where id=?";
-		Object[] params={shopOrder.getUsername(),shopOrder.getUseraddress(),shopOrder.getCost(),shopOrder.getStatus(),shopOrder.getId()};
+		String sql="update shoporder set uid=?,uaddress=?,cost=?,status=?,type=?,seller=?,quantity=?,pid=? where id=?";
+		Object[] params={shopOrder.getUid(),shopOrder.getUaddress(),shopOrder.getCost(),shopOrder.getStatus(),shopOrder.getType(),shopOrder.getSeller(),shopOrder.getQuantity(),shopOrder.getPid(),shopOrder.getId()};
 		return DBUtil.executeUpdate(sql, params);
 	}
 	
@@ -157,6 +164,289 @@ public class ShopOrderDaoImpl {
 		return DBUtil.executeUpdate(sql, params);
 	}
 	
+	/**
+	 * 查找买到的宝贝(卖家已经同意的)
+	 * @param uid
+	 * @return
+	 */
+	public  List<ShopOrder> selectBoughtYes(String uid){
+		List<ShopOrder> shopOrders = new ArrayList<>();
+		ResultSet rs = null;
+		String sql = "select * from shoporder where uid=? and status=1 and type=3";
+		Object[] params = {uid};
+		rs = DBUtil.excuteQuery(sql, params);
+		try {
+				while(rs.next()) {
+					ShopOrder shopOrder = new ShopOrder(
+							rs.getInt("id"),
+							rs.getString("uid"),
+							rs.getString("uaddress"),
+							rs.getString("createtime"),
+							rs.getInt("cost"),
+							rs.getInt("status"),
+							rs.getInt("type"),
+							rs.getString("seller"),
+							rs.getInt("quantity"),
+							rs.getInt("pid"));
+					shopOrders.add(shopOrder);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return null;
+			}finally {
+				DBUtil.closeAll(rs, DBUtil.pstmt, DBUtil.con);
+			}
+		return shopOrders;
+	}
+	
+	/**
+	 * 查询已经收到货的宝贝
+	 * @param uid
+	 * @return
+	 */
+	public  List<ShopOrder> selectBoughtHas(String uid){
+		List<ShopOrder> shopOrders = new ArrayList<>();
+		ResultSet rs = null;
+		String sql = "select * from shoporder where uid=? and status=1 and type=1";
+		Object[] params = {uid};
+		rs = DBUtil.excuteQuery(sql, params);
+		try {
+				while(rs.next()) {
+					ShopOrder shopOrder = new ShopOrder(
+							rs.getInt("id"),
+							rs.getString("uid"),
+							rs.getString("uaddress"),
+							rs.getString("createtime"),
+							rs.getInt("cost"),
+							rs.getInt("status"),
+							rs.getInt("type"),
+							rs.getString("seller"),
+							rs.getInt("quantity"),
+							rs.getInt("pid"));
+					shopOrders.add(shopOrder);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return null;
+			}finally {
+				DBUtil.closeAll(rs, DBUtil.pstmt, DBUtil.con);
+			}
+		return shopOrders;
+	}
+	
+	/**
+	 * 查找买到的宝贝(卖家不同意的)
+	 * @param uid
+	 * @return
+	 */
+	public  List<ShopOrder> selectBoughtNo(String uid){
+		List<ShopOrder> shopOrders = new ArrayList<>();
+		ResultSet rs = null;
+		String sql = "select * from shoporder where uid=? and status=2";
+		Object[] params = {uid};
+		rs = DBUtil.excuteQuery(sql, params);
+		try {
+				while(rs.next()) {
+					ShopOrder shopOrder = new ShopOrder(
+							rs.getInt("id"),
+							rs.getString("uid"),
+							rs.getString("uaddress"),
+							rs.getString("createtime"),
+							rs.getInt("cost"),
+							rs.getInt("status"),
+							rs.getInt("type"),
+							rs.getString("seller"),
+							rs.getInt("quantity"),
+							rs.getInt("pid"));
+					shopOrders.add(shopOrder);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return null;
+			}finally {
+				DBUtil.closeAll(rs, DBUtil.pstmt, DBUtil.con);
+			}
+		return shopOrders;
+	}
+	
+	
+	/**
+	 * 查找买到的宝贝(卖家还在审核中的)
+	 * @param uid
+	 * @return
+	 */
+	public  List<ShopOrder> selectBoughtWaiting(String uid){
+		List<ShopOrder> shopOrders = new ArrayList<>();
+		ResultSet rs = null;
+		String sql = "select * from shoporder where uid=? and status=3";
+		Object[] params = {uid};
+		rs = DBUtil.excuteQuery(sql, params);
+		try {
+				while(rs.next()) {
+					ShopOrder shopOrder = new ShopOrder(
+							rs.getInt("id"),
+							rs.getString("uid"),
+							rs.getString("uaddress"),
+							rs.getString("createtime"),
+							rs.getInt("cost"),
+							rs.getInt("status"),
+							rs.getInt("type"),
+							rs.getString("seller"),
+							rs.getInt("quantity"),
+							rs.getInt("pid"));
+					shopOrders.add(shopOrder);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return null;
+			}finally {
+				DBUtil.closeAll(rs, DBUtil.pstmt, DBUtil.con);
+			}
+		return shopOrders;
+	}
+	
+	
+	/**
+	 * 确认收货
+	 * @param id
+	 * @return
+	 */
+	public boolean confirm(int id) {
+		String sql="update shoporder set type=1 where id=?";
+		Object[] params = {id};
+		return DBUtil.executeUpdate(sql, params);
+	}
+	
+	
+	/**
+	 * 查找卖出的宝贝(自己同意的)
+	 * @param seller
+	 * @return
+	 */
+	public  List<ShopOrder> selectSoldYes(String seller){
+		List<ShopOrder> shopOrders = new ArrayList<>();
+		ResultSet rs = null;
+		String sql = "select * from shoporder where seller=? and status=1";
+		Object[] params = {seller};
+		rs = DBUtil.excuteQuery(sql, params);
+		try {
+				while(rs.next()) {
+					ShopOrder shopOrder = new ShopOrder(
+							rs.getInt("id"),
+							rs.getString("uid"),
+							rs.getString("uaddress"),
+							rs.getString("createtime"),
+							rs.getInt("cost"),
+							rs.getInt("status"),
+							rs.getInt("type"),
+							rs.getString("seller"),
+							rs.getInt("quantity"),
+							rs.getInt("pid"));
+					shopOrders.add(shopOrder);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return null;
+			}finally {
+				DBUtil.closeAll(rs, DBUtil.pstmt, DBUtil.con);
+			}
+		return shopOrders;
+	}
+	
+	
+	/**
+	 * 查找卖出的宝贝(自己不同意的)
+	 * @param seller
+	 * @return
+	 */
+	public  List<ShopOrder> selectSoldNo(String seller){
+		List<ShopOrder> shopOrders = new ArrayList<>();
+		ResultSet rs = null;
+		String sql = "select * from shoporder where seller=? and status=2";
+		Object[] params = {seller};
+		rs = DBUtil.excuteQuery(sql, params);
+		try {
+				while(rs.next()) {
+					ShopOrder shopOrder = new ShopOrder(
+							rs.getInt("id"),
+							rs.getString("uid"),
+							rs.getString("uaddress"),
+							rs.getString("createtime"),
+							rs.getInt("cost"),
+							rs.getInt("status"),
+							rs.getInt("type"),
+							rs.getString("seller"),
+							rs.getInt("quantity"),
+							rs.getInt("pid"));
+					shopOrders.add(shopOrder);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return null;
+			}finally {
+				DBUtil.closeAll(rs, DBUtil.pstmt, DBUtil.con);
+			}
+		return shopOrders;
+	}
+	
+	
+	/**
+	 * 查找卖出的宝贝(自己还在审核中的)
+	 * @param seller
+	 * @return
+	 */
+	public  List<ShopOrder> selectSoldWaiting(String seller){
+		List<ShopOrder> shopOrders = new ArrayList<>();
+		ResultSet rs = null;
+		String sql = "select * from shoporder where seller=? and status=3";
+		Object[] params = {seller};
+		rs = DBUtil.excuteQuery(sql, params);
+		try {
+				while(rs.next()) {
+					ShopOrder shopOrder = new ShopOrder(
+							rs.getInt("id"),
+							rs.getString("uid"),
+							rs.getString("uaddress"),
+							rs.getString("createtime"),
+							rs.getInt("cost"),
+							rs.getInt("status"),
+							rs.getInt("type"),
+							rs.getString("seller"),
+							rs.getInt("quantity"),
+							rs.getInt("pid"));
+					shopOrders.add(shopOrder);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return null;
+			}finally {
+				DBUtil.closeAll(rs, DBUtil.pstmt, DBUtil.con);
+			}
+		return shopOrders;
+	}
+	
+	
+	/**
+	 * 允许买家购买
+	 * @param id
+	 * @return
+	 */
+	public boolean allow(int id) {
+		String sql = "update shoporder set status=1 where id=?";
+		Object[] params = {id};
+		return DBUtil.executeUpdate(sql, params);
+	}
+	
+	/**
+	 * 拒绝买家购买
+	 * @param id
+	 * @return
+	 */
+	public boolean refuse(int id) {
+		String sql = "update shoporder set status=2 where id=?";
+		Object[] params = {id};
+		return DBUtil.executeUpdate(sql, params);
+	}
 	
 	
 }

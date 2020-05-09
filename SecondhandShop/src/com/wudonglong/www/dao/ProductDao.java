@@ -1,19 +1,15 @@
 package com.wudonglong.www.dao;
 
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+
 import java.util.List;
 
 import com.wudonglong.www.entity.Product;
-import com.wudonglong.www.util.DBUtil;
 
 public interface ProductDao {
 	
-	
-	
 	/**
-	 * 查询商品
+	 * 查询审核通过的商品
 	 * @return
 	 * @Date 2020-05-01
 	 */
@@ -22,15 +18,17 @@ public interface ProductDao {
 	
 	
 	/**
-	 * 根据商品名字查询商品
+	 * 根据商品名字查询审核通过的商品
 	 * @param name
 	 * @return
 	 */
 	public  List<Product> selectAllByName(String name);
 	
 	
+
+	
 	/**
-	 * 根据ID查询商品
+	 * 根据ID查询审核通过的商品
 	 * @param id
 	 * @return
 	 */
@@ -38,7 +36,7 @@ public interface ProductDao {
 	
 	
 	/**
-	 * 根据大分类查出商品
+	 * 根据大分类查出审核通过的商品
 	 * @param parentid
 	 * @return
 	 */
@@ -48,7 +46,7 @@ public interface ProductDao {
 	
 	
 	/**
-	 * 根据小分类查出商品
+	 * 根据小分类查出审核通过的商品
 	 * @param childid
 	 * @return
 	 */
@@ -61,7 +59,7 @@ public interface ProductDao {
 	 * @return
 	 */
 	public boolean insert(Product product);
-
+	
 	
 	/**
 	 * 更新商品信息
@@ -78,6 +76,7 @@ public interface ProductDao {
 	 * @return
 	 */
 	public  boolean del(int id);
+	
 	
 	/**
 	 * 根据页面大小获得product表的总页数
@@ -104,6 +103,7 @@ public interface ProductDao {
 	 */
 	public  int totalPageByChildId(int count,int childid);
 	
+	
 	/**
 	 * 计算按名字分类商品的总页数
 	 * @param count 页面大小
@@ -111,7 +111,6 @@ public interface ProductDao {
 	 * @return
 	 */
 	public  int totalPageByname(int count,String name);
-	
 	
 	/**
 	 * 分页查询所有商品
@@ -144,7 +143,6 @@ public interface ProductDao {
 	public  List<Product> selectAllByChildId(int cpage,int count,int childid);
 	
 	
-	
 	/**
 	 * 根据一个id数组查询单个商品的所有信息
 	 * @param ids
@@ -161,19 +159,10 @@ public interface ProductDao {
 	public  List<Product> selectAllByT();
 	
 	/**
-	 * 查询热卖商品
+	 * 按库存排行查询
 	 * @return
 	 */
-	public  List<Product> selectAllByHot();
-	
-	
-	/**
-	 * 减少商品库存
-	 * @param stock
-	 * @param id
-	 * @return
-	 */
-	public boolean updateStock(int stock,int id);
+	public  List<Product> selectAllByStock();
 	
 	/**
 	 * 查询审核成功的商品
@@ -188,7 +177,6 @@ public interface ProductDao {
 	 * @return
 	 */
 	public List<Product> myProductValid2(String uid);
-
 	
 	
 	
@@ -198,7 +186,46 @@ public interface ProductDao {
 	 * @return
 	 */
 	public List<Product> myProductValid3(String uid);
-
-
 	
+	
+	
+	/**
+	 * 减少商品库存
+	 * @param stock
+	 * @param id
+	 * @return
+	 */
+	public boolean updateStock(int quantity,int id);
+	
+	/**
+	 * 取消订单,库存加上购买数量
+	 * @param quantity
+	 * @param id
+	 * @return
+	 */
+	public boolean addStock(int quantity,int id);
+	
+	/**
+	 * 查出所有待审核的商品
+	 * @return
+	 */
+	public List<Product> selectAudit();
+	
+	/**
+	 * 更新商品信息
+	 * @param id
+	 * @param valid
+	 * @return
+	 */
+	public boolean updateValid(int id,int valid);
+
+	/**
+	 * 拒绝商品上传
+	 * @param id
+	 * @param valid
+	 * @param reason
+	 * @return
+	 */
+	public boolean refuse(int id,int valid,String reason);
+
 }

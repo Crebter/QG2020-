@@ -12,6 +12,7 @@ public class ShopCar implements Serializable{
 	private int pid;
 	private String uid;
 	private int valid;
+	private String seller;
 	
 	public ShopCar() {
 
@@ -21,6 +22,37 @@ public class ShopCar implements Serializable{
 	
 	
 	
+	
+	
+	
+	
+	
+	
+	public ShopCar(int id, String picture, String pname, int price, int quantity, int stock, int pid, String uid,
+			int valid, String seller) {
+		super();
+		this.id = id;
+		this.picture = picture;
+		this.pname = pname;
+		this.price = price;
+		this.quantity = quantity;
+		this.stock = stock;
+		this.pid = pid;
+		this.uid = uid;
+		this.valid = valid;
+		this.seller = seller;
+	}
+
+
+
+
+
+
+
+
+
+
+
 	public ShopCar(int id, String picture, String pname, int price, int quantity, int stock, int pid, String uid,int valid) {
 //		super();
 		this.id = id;
@@ -86,6 +118,22 @@ public class ShopCar implements Serializable{
 	}
 	public void setValid(int valid) {
 		this.valid = valid;
+	}
+
+
+
+
+
+	public String getSeller() {
+		return seller;
+	}
+
+
+
+
+
+	public void setSeller(String seller) {
+		this.seller = seller;
 	}
 	
 	
